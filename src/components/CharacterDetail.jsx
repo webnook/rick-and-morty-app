@@ -18,7 +18,7 @@ const CharacterDetail = () => {
               className={`status ${
                 character.status === "Dead" ? "red" : ""
               }`}></span>
-            <span>&nbsp;{character.status}</span>
+                      <span>&nbsp;{ character.status}</span>
           </div>
         </div>
       </div>
