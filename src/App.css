@@ -58,6 +58,12 @@
 .characters-list {
   width: 40%;
 }
+.loader{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 26.5rem;
+}
 
 .characters-list p {
   font-size: 1.3rem;
