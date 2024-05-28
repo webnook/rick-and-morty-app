@@ -1,6 +1,53 @@
-import { character, episodes } from "../../data/data";
+import { useEffect, useState } from "react";
+import { episodes } from "../../data/data";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/outline";
-const CharacterDetail = ({selectedId}) => {
+import axios from "axios";
+import toast from "react-hot-toast";
+import Loader from "./Loader";
+import { InfinitySpin } from "react-loader-spinner";
+const CharacterDetail = ({ selectedId }) => {
+  const [character, setCharacter] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get(
+          `https://rickandmortyapi.com/api/character/${selectedId}`
+        );
+        setCharacter(data);
+      } catch (error) {
+        setCharacter(null);
+        toast.error(error.response.data.error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (selectedId) fetchData();
+  }, [selectedId]);
+
+  if (isLoading)
+    return (
+      <div
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "flex-end",
+          height: "16.5rem",
+        }}>
+        <Loader>
+          <InfinitySpin color="red" />
+        </Loader>
+      </div>
+    );
+
+  if (!character || !selectedId)
+    return (
+      <div style={{ flex: 1, color: "var(--slate-300)", fontSize: "1.5rem" }}>
+        please select a character!
+      </div>
+    );
   return (
     <div style={{ flex: 1 }}>
       <div className="character-detail">
