@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import CharacterDetail from "./components/CharacterDetail";
 import CharacterList from "./components/CharacterList";
-import Navbar from "./components/Navbar";
+import Navbar, { Favorites } from "./components/Navbar";
 import { Search } from "./components/Navbar";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -13,18 +13,24 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const getData = async () => {
       try {
         setIsLoading(true);
         const { data } = await axios.get(
-          `https://rickandmortyapi.com/api/character?name=${query}`
+          `https://rickandmortyapi.com/api/character?name=${query}`,
+          { signal }
         );
         setCharacters(data.results.slice(0, 5));
       } catch (error) {
-        setCharacters([]);
-        toast.error(error.response.data.error);
+        if (!axios.isCancel()) {
+          setCharacters([]);
+          toast.error(error.response.data.error);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -34,11 +40,18 @@ const App = () => {
       return;
     }
     getData();
+    return () => controller.abort();
   }, [query]);
 
-  const onSelectCharacter = (id) => {
+  const selectCharacterHandler = (id) => {
     setSelectedId((prevId) => (prevId === id ? null : id));
   };
+  const addFavoriteHandler = (character) => {
+    setFavorites((prevFav) => [...prevFav, character]);
+  };
+  const isAddedToFavorites = favorites
+    .map((fav) => fav.id)
+    .includes(selectedId);
 
   return (
     <div className="app">
@@ -49,15 +62,20 @@ const App = () => {
           query={query}
           setQuery={setQuery}
         />
+        <Favorites numOfFavorites={favorites.length} />
       </Navbar>
       <div className="main">
         <CharacterList
           characters={characters}
           isLoading={isLoading}
-          onSelectCharacter={onSelectCharacter}
+          onSelectCharacter={selectCharacterHandler}
           selectedId={selectedId}
         />
-        <CharacterDetail selectedId={selectedId} />
+        <CharacterDetail
+          selectedId={selectedId}
+          onAddFavorite={addFavoriteHandler}
+          isAddedToFavorites={isAddedToFavorites}
+        />
       </div>
     </div>
   );

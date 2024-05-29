@@ -4,10 +4,6 @@ const Navbar = ({ numOfResult, children }) => {
     <nav className="navbar">
       <div className="navbar__logo">🐱‍👤</div>
       {children}
-      <button className="heart">
-        <HeartIcon className="icon" />
-        <span className="badge">3</span>
-      </button>
     </nav>
   );
 };
@@ -23,6 +19,14 @@ export const Search = ({ numOfResult, query, setQuery }) => {
       />
       <div className="navbar__result">Found {numOfResult} items</div>
     </>
+  );
+};
+export const Favorites = ({ numOfFavorites }) => {
+  return (
+    <button className="heart">
+      <HeartIcon className="icon" />
+      <span className="badge">{numOfFavorites}</span>
+    </button>
   );
 };
 

@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Loader from "./Loader";
 import { InfinitySpin } from "react-loader-spinner";
-const CharacterDetail = ({ selectedId }) => {
+const CharacterDetail = ({ selectedId, onAddFavorite, isAddedToFavorites }) => {
   const [character, setCharacter] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [episodes, setEpisodes] = useState([]);
@@ -79,7 +79,15 @@ const CharacterDetail = ({ selectedId }) => {
             <p>{character.location.name}</p>
           </div>
           <div className="actions">
-            <button className="btn btn--primary">Add to Favorites</button>
+            {isAddedToFavorites ? (
+              <p style={{color:"white"}} className="btn btn--primary">Already Added ✅</p>
+            ) : (
+              <button
+                onClick={() => onAddFavorite(character)}
+                className="btn btn--primary">
+                Add to Favorites
+              </button>
+            )}
           </div>
         </div>
       </div>
