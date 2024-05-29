@@ -58,7 +58,7 @@
 .characters-list {
   width: 40%;
 }
-.loader{
+.loader {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -196,8 +196,13 @@
   background-color: var(--slate-800);
   border-radius: 1rem;
   padding: 1rem;
+  height: 17rem;
+  overflow-y: scroll;
 }
-
+.character-episodes::-webkit-scrollbar {
+  width: 0px;
+  background-color: transparent;
+}
 .character-episodes .title {
   display: flex;
   align-items: center;
