@@ -1,4 +1,7 @@
-import { HeartIcon } from "@heroicons/react/24/outline";
+import { HeartIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
+import Modal from "./Modal";
+import { Character } from "./CharacterList";
 const Navbar = ({ numOfResult, children }) => {
   return (
     <nav className="navbar">
@@ -21,12 +24,26 @@ export const Search = ({ numOfResult, query, setQuery }) => {
     </>
   );
 };
-export const Favorites = ({ numOfFavorites }) => {
+export const Favorites = ({ favorites, OnDeleteFavorite }) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <button className="heart">
-      <HeartIcon className="icon" />
-      <span className="badge">{numOfFavorites}</span>
-    </button>
+    <>
+      <Modal onOpen={setIsOpen} open={isOpen} title="List of Favorites">
+        {favorites.map((item) => (
+          <Character key={item.id} item={item}>
+            <button
+              className="icon red"
+              onClick={() => OnDeleteFavorite(item.id)}>
+              <TrashIcon />
+            </button>
+          </Character>
+        ))}
+      </Modal>
+      <button className="heart" onClick={() => setIsOpen((is) => !is)}>
+        <HeartIcon className="icon" />
+        <span className="badge">{favorites.length}</span>
+      </button>
+    </>
   );
 };
 

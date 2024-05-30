@@ -53,6 +53,10 @@ const App = () => {
     .map((fav) => fav.id)
     .includes(selectedId);
 
+  const deleteFavoriteHandler = (id) => {
+    setFavorites((prevFav) => prevFav.filter((fav) => fav.id !== id));
+  };
+
   return (
     <div className="app">
       <Toaster />
@@ -62,7 +66,10 @@ const App = () => {
           query={query}
           setQuery={setQuery}
         />
-        <Favorites numOfFavorites={favorites.length} />
+        <Favorites
+          favorites={favorites}
+          OnDeleteFavorite={deleteFavoriteHandler}
+        />
       </Navbar>
       <div className="main">
         <CharacterList
